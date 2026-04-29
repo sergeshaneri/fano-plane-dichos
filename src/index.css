@@ -9,8 +9,8 @@
   --color-highlight-2: #06b6d4;
   --color-highlight-3: #ffffff;
   
-  --font-mono: "JetBrains Mono", "Courier New", Courier, monospace;
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "DM Sans", system-ui, -apple-system, sans-serif;
+  --font-sans: "DM Sans", system-ui, -apple-system, sans-serif;
   --font-serif: "Georgia", serif;
 }
 

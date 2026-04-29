@@ -56,7 +56,7 @@ export function FunctionMatrix({
         <div
           key={f.id}
           className={cn(
-            "flex items-center justify-center font-mono font-medium transition-colors duration-300",
+            "flex items-center justify-center font-sans font-medium transition-colors duration-300",
             compact ? "h-6" : "h-16 px-2 text-center",
             getCellColor(f)
           )}

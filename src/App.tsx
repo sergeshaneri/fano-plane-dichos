@@ -36,7 +36,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0c] text-[#e2e2e7] p-8 md:p-12 lg:p-16 flex flex-col font-sans overflow-x-hidden">
-      <div className="flex flex-col xl:flex-row gap-12 flex-1 mb-12">
+      <div className="flex flex-col xl:flex-row gap-12 flex-1 mb-12 max-w-7xl mx-auto w-full">
       
       {/* Header and Left content */}
       <div className="flex-1 max-w-2xl flex flex-col">
@@ -44,19 +44,19 @@ export default function App() {
           <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase mb-2">
             Модель А <span className="font-serif italic font-normal text-cyan-500 opacity-80">× PG(2,2)</span>
           </h1>
-          <p className="text-xs font-mono text-cyan-400 tracking-widest uppercase opacity-80 mb-2">
+          <p className="text-xs font-sans text-cyan-400 tracking-widest uppercase opacity-80 mb-2">
             Abelian Group G(Z₂³) • Hadamard Matrix Projection
           </p>
           <div className="flex gap-2 mt-4 mb-4">
             <button 
               onClick={() => setViewMode('model_a')}
-              className={`text-[10px] uppercase font-mono tracking-widest px-4 py-2 border transition-colors ${viewMode === 'model_a' ? 'border-cyan-400 text-cyan-400 bg-cyan-400/10' : 'border-white/20 text-white/60 hover:text-cyan-400 hover:border-cyan-400 bg-white/5 cursor-pointer'}`}
+              className={`text-[10px] uppercase font-sans tracking-widest px-4 py-2 border transition-colors ${viewMode === 'model_a' ? 'border-cyan-400 text-cyan-400 bg-cyan-400/10' : 'border-white/20 text-white/60 hover:text-cyan-400 hover:border-cyan-400 bg-white/5 cursor-pointer'}`}
             >
               Интерактивная Модель А
             </button>
             <button 
               onClick={() => setViewMode('hadamard')}
-              className={`text-[10px] uppercase font-mono tracking-widest px-4 py-2 border transition-colors ${viewMode === 'hadamard' ? 'border-cyan-400 text-cyan-400 bg-cyan-400/10' : 'border-white/20 text-white/60 hover:text-cyan-400 hover:border-cyan-400 bg-white/5 cursor-pointer'}`}
+              className={`text-[10px] uppercase font-sans tracking-widest px-4 py-2 border transition-colors ${viewMode === 'hadamard' ? 'border-cyan-400 text-cyan-400 bg-cyan-400/10' : 'border-white/20 text-white/60 hover:text-cyan-400 hover:border-cyan-400 bg-white/5 cursor-pointer'}`}
             >
               Матрица Адамара
             </button>
@@ -70,7 +70,7 @@ export default function App() {
         {/* Fano Plane Interactive Graph */}
         <div className="bg-white/5 data-border p-8 mb-8 relative overflow-hidden">
           <div className="absolute inset-0 opacity-[0.03]" style={{backgroundImage: "radial-gradient(#fff 1px, transparent 1px)", backgroundSize: "20px 20px"}}></div>
-          <div className="font-mono text-[10px] uppercase tracking-widest text-white/40 mb-6 border-b border-white/10 pb-2 relative z-10">
+          <div className="font-sans text-[10px] uppercase tracking-widest text-white/40 mb-6 border-b border-white/10 pb-2 relative z-10">
             Плоскость Фано (PG(2,2))
           </div>
           <div className="relative z-10">
@@ -100,13 +100,13 @@ export default function App() {
           <div className="mt-8 flex justify-center gap-4 relative z-10 flex-wrap">
             <button 
               onClick={() => setShowLabels(!showLabels)}
-              className="text-[10px] sm:text-xs uppercase font-mono tracking-widest px-4 py-2 border border-white/20 text-white/60 hover:text-cyan-400 hover:border-cyan-400 transition-colors bg-white/5 hover:bg-cyan-400/10 cursor-pointer"
+              className="text-[10px] sm:text-xs uppercase font-sans tracking-widest px-4 py-2 border border-white/20 text-white/60 hover:text-cyan-400 hover:border-cyan-400 transition-colors bg-white/5 hover:bg-cyan-400/10 cursor-pointer"
             >
               {showLabels ? 'Скрыть подписи' : 'Показать подписи'}
             </button>
             <button 
               onClick={() => setSelectedNodes([])}
-              className="text-[10px] sm:text-xs uppercase font-mono tracking-widest px-4 py-2 border border-white/20 text-white/60 hover:text-cyan-400 hover:border-cyan-400 transition-colors bg-white/5 hover:bg-cyan-400/10 cursor-pointer"
+              className="text-[10px] sm:text-xs uppercase font-sans tracking-widest px-4 py-2 border border-white/20 text-white/60 hover:text-cyan-400 hover:border-cyan-400 transition-colors bg-white/5 hover:bg-cyan-400/10 cursor-pointer"
             >
               Сбросить выделение
             </button>
@@ -119,7 +119,7 @@ export default function App() {
         
         {viewMode === 'hadamard' ? (
           <div className="data-box p-8 relative overflow-hidden mt-8 xl:mt-0">
-            <div className="font-mono text-[10px] uppercase tracking-widest text-white/40 mb-6 border-b border-white/10 pb-2 relative z-10">
+            <div className="font-sans text-[10px] uppercase tracking-widest text-white/40 mb-6 border-b border-white/10 pb-2 relative z-10">
               Матрица Адамара
             </div>
             <HadamardMatrix />
@@ -129,7 +129,7 @@ export default function App() {
             {/* Main interactive 8-block */}
             <div className="data-box p-8 relative overflow-hidden mt-8 xl:mt-0">
               <div className="absolute inset-0 opacity-[0.03]" style={{backgroundImage: "radial-gradient(#fff 1px, transparent 1px)", backgroundSize: "20px 20px"}}></div>
-              <div className="font-mono text-[10px] uppercase tracking-widest text-white/40 mb-6 border-b border-white/10 pb-2 relative z-10">
+              <div className="font-sans text-[10px] uppercase tracking-widest text-white/40 mb-6 border-b border-white/10 pb-2 relative z-10">
                 Взаимодействие дихотомий
               </div>
               
@@ -197,7 +197,7 @@ export default function App() {
 
             {/* Small multiples gallery */}
             <div className="data-box p-8">
-              <div className="font-mono text-[10px] uppercase tracking-widest text-white/40 mb-6 border-b border-white/10 pb-2">
+              <div className="font-sans text-[10px] uppercase tracking-widest text-white/40 mb-6 border-b border-white/10 pb-2">
                 Все дихотомии
               </div>
               
@@ -218,7 +218,7 @@ export default function App() {
                           compact 
                         />
                       </div>
-                      <div className={`text-[10px] uppercase tracking-wider font-mono text-center
+                      <div className={`text-[10px] uppercase tracking-wider font-sans text-center
                         ${isHighlighted ? 'text-cyan-400 font-bold drop-shadow-[0_0_4px_rgba(34,211,238,0.4)]' : 'text-white/40 group-hover:text-white/80'}
                       `}>
                         {d.longName}
@@ -233,18 +233,24 @@ export default function App() {
       </div>
       </div>
 
-      <footer className="mt-auto flex flex-col sm:flex-row justify-between items-center gap-6 pt-8 border-t border-white/10 w-full max-w-7xl mx-auto">
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full">
-            <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
-            <span className="text-[10px] uppercase tracking-widest font-bold">Mode: Analysis</span>
-          </div>
-          <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full opacity-40">
-            <span className="text-[10px] uppercase tracking-widest font-bold">Schema: Hadamard_Canonical</span>
-          </div>
-        </div>
-        <div className="text-[10px] font-mono opacity-40 uppercase tracking-[0.3em] text-center sm:text-right">
-          Cognitive Architecture Visualization <span className="text-cyan-400 opacity-60">v2.4.0</span>
+      <footer className="mt-auto flex flex-col sm:flex-row justify-center items-center gap-6 pt-8 border-t border-white/10 w-full max-w-7xl mx-auto">
+        <div className="flex gap-4 text-[10px] font-sans uppercase tracking-widest">
+          <a 
+            href="https://t.me/sergeyshaneri" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full hover:bg-cyan-500/10 hover:text-cyan-400 transition-colors"
+          >
+            <span>связаться с автором</span>
+          </a>
+          <a 
+            href="https://sergeshaneri.github.io/socionics-wiki/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full hover:bg-cyan-500/10 hover:text-cyan-400 transition-colors"
+          >
+            <span>соционика вики</span>
+          </a>
         </div>
       </footer>
     </div>

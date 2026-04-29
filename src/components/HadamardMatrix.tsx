@@ -18,7 +18,7 @@ export function HadamardMatrix() {
             ))}
           </tr>
         </thead>
-        <tbody className="text-xs font-mono">
+        <tbody className="text-xs font-sans">
           {sortedFunctions.map((f, i) => (
             <tr key={f.id} className={`hover:bg-white/5 transition-colors border-b border-white/5 ${i % 2 === 1 ? 'bg-white/[0.02]' : ''}`}>
               <td className="p-3 text-left font-serif italic text-white/80">{f.name}</td>

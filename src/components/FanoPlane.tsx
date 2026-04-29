@@ -131,7 +131,7 @@ export function FanoPlane({
                   x={(FANO_LAYOUT as any)[d.id].labelOffset.dx}
                   textAnchor={(FANO_LAYOUT as any)[d.id].labelOffset.anchor}
                   alignmentBaseline="middle"
-                  className={cn("font-mono text-[3.5px] uppercase tracking-wider font-bold transition-colors pointer-events-none drop-shadow-sm", textClass)}
+                  className={cn("font-sans text-[3.5px] uppercase tracking-wider font-bold transition-colors pointer-events-none drop-shadow-sm", textClass)}
                 >
                   {d.name}
                 </text>
