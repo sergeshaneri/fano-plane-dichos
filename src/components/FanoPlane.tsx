@@ -1,11 +1,6 @@
 import { motion } from 'framer-motion';
 import { FANO_LAYOUT, FANO_LINES, DICHOTOMIES } from '../data/socionics';
-import { clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-
-function cn(...inputs: (string | undefined | null | false)[]) {
-  return twMerge(clsx(inputs));
-}
+import { cn } from '../utils/cn';
 
 export function FanoPlane({
   selectedNodes,
@@ -59,18 +54,12 @@ export function FanoPlane({
           }
 
           const pts = getLinePoints(line.nodes);
-          // Standard lines form triangles and altitudes
-          // If it's the bottom edge (6,5,3) it's straight
-          // For edges, we just connect start to end, since midpoint is collinear
-          const start = pts[0];
-          const end = pts[2]; // assuming order is end-to-end
-          // Special case: altitude passing through center
-          
+          const [start, , end] = pts;
           return (
             <motion.line
               key={line.id}
-              x1={pts[0][0]} y1={pts[0][1]}
-              x2={pts[2][0]} y2={pts[2][1]}
+              x1={start[0]} y1={start[1]}
+              x2={end[0]} y2={end[1]}
               className={cn("transition-colors duration-300", strokeClass)}
               strokeWidth={strokeWidth}
             />
@@ -79,7 +68,8 @@ export function FanoPlane({
 
         {/* Draw Nodes */}
         {DICHOTOMIES.map((d) => {
-          const pos = FANO_LAYOUT[d.id as keyof typeof FANO_LAYOUT].pos;
+          const layout = FANO_LAYOUT[d.id as keyof typeof FANO_LAYOUT];
+          const pos = layout.pos;
           const isSelectedPrimary = selectedNodes[0] === d.id;
           const isSelectedSecondary = selectedNodes[1] === d.id;
           const isProduct = productNode === d.id;
@@ -127,9 +117,9 @@ export function FanoPlane({
               />
               {showLabels && (
                 <text
-                  y={(FANO_LAYOUT as any)[d.id].labelOffset.dy}
-                  x={(FANO_LAYOUT as any)[d.id].labelOffset.dx}
-                  textAnchor={(FANO_LAYOUT as any)[d.id].labelOffset.anchor}
+                  y={layout.labelOffset.dy}
+                  x={layout.labelOffset.dx}
+                  textAnchor={layout.labelOffset.anchor}
                   alignmentBaseline="middle"
                   className={cn("font-sans text-[3.5px] uppercase tracking-wider font-bold transition-colors pointer-events-none drop-shadow-sm", textClass)}
                 >

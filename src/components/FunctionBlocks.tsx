@@ -1,10 +1,5 @@
-import { FunctionData, DICHOTOMIES, STANDARD_LAYOUT } from '../data/socionics';
-import { clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-
-function cn(...inputs: (string | undefined | null | false)[]) {
-  return twMerge(clsx(inputs));
-}
+import { FunctionData, STANDARD_LAYOUT } from '../data/socionics';
+import { cn } from '../utils/cn';
 
 export function FunctionMatrix({
   dichotomyId,
@@ -46,9 +41,6 @@ export function FunctionMatrix({
 
     return "bg-[#0a0a0c] text-white";
   };
-
-  const d1Info = selectedNodes[0] ? DICHOTOMIES.find(d => d.id === selectedNodes[0]) : null;
-  const d2Info = selectedNodes[1] ? DICHOTOMIES.find(d => d.id === selectedNodes[1]) : null;
 
   return (
     <div className={cn("grid grid-cols-2 gap-[1px] bg-white/10 border border-white/10 p-[1px]", compact ? "w-12 text-[8px] rounded-sm overflow-hidden" : "w-[340px] text-xs data-box")}>
