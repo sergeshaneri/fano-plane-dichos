@@ -1,20 +1,36 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Модель А × Плоскость Фано
 
-# Run and deploy your AI Studio app
+Интерактивная визуализация 7 дихотомий и 8 функций соционики через
+плоскость Фано `PG(2,2)` и матрицу Адамара.
 
-This contains everything you need to run your app locally.
+7 дихотомий соответствуют 7 точкам плоскости Фано — ненулевым векторам
+элементарной абелевой группы `(Z/2)³`. Произведение двух дихотомий
+вычисляется как побитовый XOR их индексов и всегда даёт третью точку,
+лежащую с ними на одной прямой.
 
-View your app in AI Studio: https://ai.studio/apps/20fd1b9a-2d5b-475a-a03c-261765944655
+## Стек
 
-## Run Locally
+- React 19 + TypeScript
+- Vite 6
+- Tailwind CSS v4
+- Framer Motion
 
-**Prerequisites:**  Node.js
+## Локальный запуск
 
+```bash
+npm install
+npm run dev
+```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Открыть [http://localhost:3000](http://localhost:3000).
+
+## Сборка и деплой
+
+```bash
+npm run build      # сборка в dist/
+npm run preview    # локальный просмотр продакшен-сборки
+npm run deploy     # публикация в gh-pages
+npm run lint       # tsc --noEmit
+```
+
+Сайт публикуется на GitHub Pages: <https://sergeshaneri.github.io/fano-plane-dichos/>
