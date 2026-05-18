@@ -1,17 +1,20 @@
 import { motion } from 'framer-motion';
 import { FANO_LAYOUT, FANO_LINES, DICHOTOMIES } from '../data/socionics';
 import { cn } from '../utils/cn';
+import type { PaletteColors } from '../themes/palettes';
 
 export function FanoPlane({
   selectedNodes,
   productNode,
   showLabels,
-  onNodeClick
+  onNodeClick,
+  colors,
 }: {
   selectedNodes: number[];
   productNode: number | null;
   showLabels: boolean;
   onNodeClick: (id: number) => void;
+  colors: PaletteColors;
 }) {
   const isLineActive = (line: typeof FANO_LINES[0]) => {
     // A line is active if all its nodes are highlighted
@@ -33,7 +36,7 @@ export function FanoPlane({
         {/* Draw the geometric Fano Plane lines */}
         {FANO_LINES.map((line) => {
           const active = isLineActive(line);
-          const strokeClass = active ? "stroke-cyan-400" : "stroke-white/20";
+          const lineStroke = active ? colors.line : 'rgba(255,255,255,0.2)';
 
           if (line.isCircle) {
             // Draw perfectly calculated inscribed circle passing through nodes 7, 2, 5
@@ -46,7 +49,8 @@ export function FanoPlane({
                 key={line.id}
                 cx={cx} cy={cy} r={r}
                 fill="none"
-                className={cn("transition-colors duration-[600ms] ease-out", strokeClass)}
+                stroke={lineStroke}
+                style={{ transition: 'stroke 0.6s ease-out' }}
                 animate={{ strokeWidth: active ? 1.5 : 0.5 }}
                 transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
               />
@@ -60,7 +64,8 @@ export function FanoPlane({
               key={line.id}
               x1={start[0]} y1={start[1]}
               x2={end[0]} y2={end[1]}
-              className={cn("transition-colors duration-[600ms] ease-out", strokeClass)}
+              stroke={lineStroke}
+              style={{ transition: 'stroke 0.6s ease-out' }}
               animate={{ strokeWidth: active ? 1.5 : 0.5 }}
               transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
             />
@@ -75,31 +80,31 @@ export function FanoPlane({
           const isSelectedSecondary = selectedNodes[1] === d.id;
           const isProduct = productNode === d.id;
           
-          let fillClass = "fill-white/[0.04]";
-          let strokeClass = "stroke-white/50";
-          let textClass = "fill-white/80";
+          let nodeFill: string = 'rgba(255,255,255,0.04)';
+          let nodeStroke: string = 'rgba(255,255,255,0.5)';
+          let nodeTextFill: string = 'rgba(255,255,255,0.8)';
           let circleScale = 1;
 
           if (isSelectedPrimary) {
-            fillClass = "fill-sky-400";
-            strokeClass = "stroke-sky-400";
-            textClass = "fill-white";
+            nodeFill = colors.d1.fill;
+            nodeStroke = colors.d1.fill;
+            nodeTextFill = colors.d1.text;
             circleScale = 1.25;
           } else if (isSelectedSecondary) {
-            fillClass = "fill-amber-300";
-            strokeClass = "stroke-amber-300";
-            textClass = "fill-white";
+            nodeFill = colors.d2.fill;
+            nodeStroke = colors.d2.fill;
+            nodeTextFill = colors.d2.text;
             circleScale = 1.25;
           } else if (isProduct) {
-            fillClass = "fill-emerald-400";
-            strokeClass = "stroke-emerald-400";
-            textClass = "fill-white";
+            nodeFill = colors.product.fill;
+            nodeStroke = colors.product.fill;
+            nodeTextFill = colors.product.text;
             circleScale = 1.25;
           } else if (selectedNodes.length > 0) {
             // Mute others — still visible, just dimmed
-            fillClass = "fill-white/[0.03]";
-            strokeClass = "stroke-white/25";
-            textClass = "fill-white/35";
+            nodeFill = 'rgba(255,255,255,0.03)';
+            nodeStroke = 'rgba(255,255,255,0.25)';
+            nodeTextFill = 'rgba(255,255,255,0.35)';
           }
 
           const ariaState = isSelectedPrimary
@@ -138,7 +143,8 @@ export function FanoPlane({
               />
               <motion.circle
                 r="3"
-                className={cn(fillClass, strokeClass)}
+                fill={nodeFill}
+                stroke={nodeStroke}
                 strokeWidth="0.5"
                 whileHover={isPressed ? undefined : { scale: 1.2 }}
                 animate={{ scale: circleScale }}
@@ -150,12 +156,13 @@ export function FanoPlane({
                   x={layout.labelOffset.dx}
                   textAnchor={layout.labelOffset.anchor}
                   alignmentBaseline="middle"
+                  fill={nodeTextFill}
                   style={
                     isPressed
                       ? { paintOrder: 'stroke', stroke: '#0a0a0c', strokeWidth: 0.7 }
                       : undefined
                   }
-                  className={cn("font-sans text-[3.5px] uppercase tracking-wider font-bold transition-colors pointer-events-none", textClass)}
+                  className="font-sans text-[3.5px] uppercase tracking-wider font-bold pointer-events-none"
                 >
                   {d.name}
                 </text>
