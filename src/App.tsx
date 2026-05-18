@@ -40,8 +40,21 @@ export default function App() {
     : null;
 
   return (
-    <div className="min-h-screen bg-[#0a0a0c] text-[#e2e2e7] p-8 md:p-12 lg:p-16 flex flex-col font-sans overflow-x-hidden">
-      <div className="grid grid-cols-1 xl:grid-cols-[1.4fr_1fr] gap-12 flex-1 mb-12 max-w-7xl mx-auto w-full">
+    <div className="relative min-h-screen bg-[#0a0a0c] text-[#e2e2e7] p-8 md:p-12 lg:p-16 flex flex-col font-sans overflow-x-hidden">
+      {/* Ambient mesh gradient — soft color blobs for depth, blurred and very low opacity */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 z-0 opacity-[0.55] mix-blend-screen"
+        style={{
+          backgroundImage: `
+            radial-gradient(900px 700px at 12% 18%, ${colors.d1.fill}26, transparent 60%),
+            radial-gradient(800px 800px at 88% 82%, ${colors.d2.fill}1f, transparent 65%),
+            radial-gradient(700px 700px at 50% 50%, ${colors.product.fill}14, transparent 70%)
+          `,
+          filter: 'blur(40px)',
+        }}
+      />
+      <div className="relative z-10 grid grid-cols-1 xl:grid-cols-[1.4fr_1fr] gap-12 flex-1 mb-12 max-w-7xl mx-auto w-full">
 
       {/* Header and Left content */}
       <div className="flex flex-col min-w-0">
@@ -352,7 +365,7 @@ export default function App() {
       </div>
       </div>
 
-      <footer className="mt-auto flex flex-col sm:flex-row justify-center items-center gap-6 pt-8 border-t border-white/10 w-full max-w-7xl mx-auto">
+      <footer className="relative z-10 mt-auto flex flex-col sm:flex-row justify-center items-center gap-6 pt-8 border-t border-white/10 w-full max-w-7xl mx-auto">
         <div className="flex gap-4 text-[10px] font-sans uppercase tracking-widest">
           <a 
             href="https://t.me/sergeyshaneri" 
