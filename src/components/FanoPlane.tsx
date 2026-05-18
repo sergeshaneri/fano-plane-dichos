@@ -34,7 +34,6 @@ export function FanoPlane({
         {FANO_LINES.map((line) => {
           const active = isLineActive(line);
           const strokeClass = active ? "stroke-cyan-400" : "stroke-white/20";
-          const strokeWidth = active ? 1.5 : 0.5;
 
           if (line.isCircle) {
             // Draw perfectly calculated inscribed circle passing through nodes 7, 2, 5
@@ -47,8 +46,9 @@ export function FanoPlane({
                 key={line.id}
                 cx={cx} cy={cy} r={r}
                 fill="none"
-                className={cn("transition-colors duration-300", strokeClass)}
-                strokeWidth={strokeWidth}
+                className={cn("transition-colors duration-[600ms] ease-out", strokeClass)}
+                animate={{ strokeWidth: active ? 1.5 : 0.5 }}
+                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
               />
             );
           }
@@ -60,8 +60,9 @@ export function FanoPlane({
               key={line.id}
               x1={start[0]} y1={start[1]}
               x2={end[0]} y2={end[1]}
-              className={cn("transition-colors duration-300", strokeClass)}
-              strokeWidth={strokeWidth}
+              className={cn("transition-colors duration-[600ms] ease-out", strokeClass)}
+              animate={{ strokeWidth: active ? 1.5 : 0.5 }}
+              transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
             />
           );
         })}
@@ -81,18 +82,18 @@ export function FanoPlane({
 
           if (isSelectedPrimary) {
             fillClass = "fill-sky-400";
-            strokeClass = "stroke-sky-300";
+            strokeClass = "stroke-sky-400";
             textClass = "fill-white";
             circleScale = 1.25;
           } else if (isSelectedSecondary) {
             fillClass = "fill-amber-300";
-            strokeClass = "stroke-amber-200";
-            textClass = "fill-zinc-900";
+            strokeClass = "stroke-amber-300";
+            textClass = "fill-white";
             circleScale = 1.25;
           } else if (isProduct) {
             fillClass = "fill-emerald-400";
-            strokeClass = "stroke-emerald-300";
-            textClass = "fill-zinc-900";
+            strokeClass = "stroke-emerald-400";
+            textClass = "fill-white";
             circleScale = 1.25;
           } else if (selectedNodes.length > 0) {
             // Mute others — still visible, just dimmed
@@ -138,8 +139,9 @@ export function FanoPlane({
               <motion.circle
                 r="3"
                 className={cn(fillClass, strokeClass)}
+                strokeWidth="0.5"
                 whileHover={isPressed ? undefined : { scale: 1.2 }}
-                animate={{ scale: circleScale, strokeWidth: isPressed ? 0.8 : 0.5 }}
+                animate={{ scale: circleScale }}
                 transition={{ type: 'spring', stiffness: 420, damping: 26 }}
               />
               {showLabels && (
@@ -148,7 +150,12 @@ export function FanoPlane({
                   x={layout.labelOffset.dx}
                   textAnchor={layout.labelOffset.anchor}
                   alignmentBaseline="middle"
-                  className={cn("font-sans text-[3.5px] uppercase tracking-wider font-bold transition-colors pointer-events-none drop-shadow-sm", textClass)}
+                  style={
+                    isPressed
+                      ? { paintOrder: 'stroke', stroke: '#0a0a0c', strokeWidth: 0.7 }
+                      : undefined
+                  }
+                  className={cn("font-sans text-[3.5px] uppercase tracking-wider font-bold transition-colors pointer-events-none", textClass)}
                 >
                   {d.name}
                 </text>
