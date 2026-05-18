@@ -284,7 +284,7 @@ export default function App() {
                           transition: { type: 'spring', stiffness: 220, damping: 24 },
                         },
                       }}
-                      className={`flex flex-col items-center gap-4 cursor-pointer group p-3 rounded-lg transition-colors text-left focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400 ${isHighlighted ? 'bg-cyan-500/[0.06]' : 'hover:bg-white/[0.03]'}`}
+                      className={`flex flex-col items-center gap-4 cursor-pointer group p-3 rounded-lg transition-colors text-left focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400 ${isHighlighted ? 'bg-cyan-400/15 shadow-[inset_0_0_0_1px_rgba(34,211,238,0.45)]' : 'hover:bg-white/[0.03]'}`}
                       onClick={() => handleNodeClick(d.id)}
                     >
                       <div className="transition-transform duration-300 group-hover:-translate-y-0.5">
