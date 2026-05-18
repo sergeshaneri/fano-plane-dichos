@@ -1,27 +1,21 @@
 import { motion } from 'framer-motion';
 import { FANO_LAYOUT, FANO_LINES, DICHOTOMIES } from '../data/socionics';
 import { cn } from '../utils/cn';
-import type { PaletteColors } from '../themes/palettes';
-
-const lightMix = (hex: string, pct: number) =>
-  `color-mix(in srgb, ${hex} ${100 - pct}%, white)`;
-
-type NodeRole = 'd1' | 'd2' | 'product' | null;
 
 export function FanoPlane({
   selectedNodes,
   productNode,
   showLabels,
-  onNodeClick,
-  colors,
+  onNodeClick
 }: {
   selectedNodes: number[];
   productNode: number | null;
   showLabels: boolean;
   onNodeClick: (id: number) => void;
-  colors: PaletteColors;
 }) {
   const isLineActive = (line: typeof FANO_LINES[0]) => {
+    // A line is active if all its nodes are highlighted
+    // which happens when 2 are selected and the 3rd is the product
     if (selectedNodes.length === 2 && productNode !== null) {
       const activeSet = new Set([...selectedNodes, productNode]);
       return line.nodes.every(n => activeSet.has(n));
@@ -33,69 +27,16 @@ export function FanoPlane({
     return nodes.map(n => FANO_LAYOUT[n as keyof typeof FANO_LAYOUT].pos);
   };
 
-  // Role helpers for premium per-node treatment
-  const roleOf = (id: number): NodeRole => {
-    if (selectedNodes[0] === id) return 'd1';
-    if (selectedNodes[1] === id) return 'd2';
-    if (productNode === id) return 'product';
-    return null;
-  };
-
-  const roleColor = (role: NodeRole) => {
-    if (role === 'd1') return colors.d1;
-    if (role === 'd2') return colors.d2;
-    if (role === 'product') return colors.product;
-    return null;
-  };
-
   return (
     <div className="relative w-full max-w-md aspect-square mx-auto selection:bg-transparent">
       <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
-        <defs>
-          {/* Per-role radial gradient fills — gives nodes volumetric "lit sphere" feel */}
-          {(['d1', 'd2', 'product'] as const).map(role => {
-            const c = roleColor(role)!;
-            return (
-              <radialGradient key={`grad-${role}`} id={`grad-${role}`} cx="32%" cy="28%" r="78%">
-                <stop offset="0%" stopColor={lightMix(c.fill, 55)} />
-                <stop offset="55%" stopColor={c.fill} />
-                <stop offset="100%" stopColor={lightMix(c.fill, -25)} />
-              </radialGradient>
-            );
-          })}
-
-          {/* Per-role soft outer glow — radial fade-out for ambient halo */}
-          {(['d1', 'd2', 'product'] as const).map(role => {
-            const c = roleColor(role)!;
-            return (
-              <radialGradient key={`glow-${role}`} id={`glow-${role}`} cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor={c.fill} stopOpacity="0.55" />
-                <stop offset="40%" stopColor={c.fill} stopOpacity="0.22" />
-                <stop offset="75%" stopColor={c.fill} stopOpacity="0.06" />
-                <stop offset="100%" stopColor={c.fill} stopOpacity="0" />
-              </radialGradient>
-            );
-          })}
-
-          {/* Subtle Gaussian-blur filter for selected node edges — soft falloff */}
-          <filter id="node-soft-glow" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur stdDeviation="0.6" />
-          </filter>
-
-          {/* Gradient stroke along active line — gives sense of "current" flowing through */}
-          <linearGradient id="line-active-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor={colors.line} stopOpacity="0.35" />
-            <stop offset="50%" stopColor={colors.line} stopOpacity="1" />
-            <stop offset="100%" stopColor={colors.line} stopOpacity="0.35" />
-          </linearGradient>
-        </defs>
-
         {/* Draw the geometric Fano Plane lines */}
         {FANO_LINES.map((line) => {
           const active = isLineActive(line);
-          const lineStroke = active ? 'url(#line-active-grad)' : 'rgba(255,255,255,0.18)';
+          const strokeClass = active ? "stroke-cyan-400" : "stroke-white/20";
 
           if (line.isCircle) {
+            // Draw perfectly calculated inscribed circle passing through nodes 7, 2, 5
             const cx = 50;
             const cy = 54;
             const r = 20;
@@ -105,9 +46,8 @@ export function FanoPlane({
                 key={line.id}
                 cx={cx} cy={cy} r={r}
                 fill="none"
-                stroke={active ? colors.line : 'rgba(255,255,255,0.18)'}
-                style={{ transition: 'stroke 0.6s ease-out, opacity 0.6s ease-out', opacity: active ? 1 : 0.85 }}
-                animate={{ strokeWidth: active ? 1.4 : 0.45 }}
+                className={cn("transition-colors duration-[600ms] ease-out", strokeClass)}
+                animate={{ strokeWidth: active ? 1.5 : 0.5 }}
                 transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
               />
             );
@@ -120,9 +60,8 @@ export function FanoPlane({
               key={line.id}
               x1={start[0]} y1={start[1]}
               x2={end[0]} y2={end[1]}
-              stroke={lineStroke}
-              style={{ transition: 'stroke 0.6s ease-out, opacity 0.6s ease-out', opacity: active ? 1 : 0.85 }}
-              animate={{ strokeWidth: active ? 1.4 : 0.45 }}
+              className={cn("transition-colors duration-[600ms] ease-out", strokeClass)}
+              animate={{ strokeWidth: active ? 1.5 : 0.5 }}
               transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
             />
           );
@@ -132,33 +71,45 @@ export function FanoPlane({
         {DICHOTOMIES.map((d) => {
           const layout = FANO_LAYOUT[d.id as keyof typeof FANO_LAYOUT];
           const pos = layout.pos;
-          const role = roleOf(d.id);
-          const isPressed = role !== null;
-          const someoneSelected = selectedNodes.length > 0;
-
-          // Default unselected
-          let nodeFill: string = 'rgba(255,255,255,0.05)';
-          let nodeStroke: string = 'rgba(255,255,255,0.55)';
-          let nodeTextFill: string = 'rgba(255,255,255,0.85)';
+          const isSelectedPrimary = selectedNodes[0] === d.id;
+          const isSelectedSecondary = selectedNodes[1] === d.id;
+          const isProduct = productNode === d.id;
+          
+          let fillClass = "fill-white/[0.04]";
+          let strokeClass = "stroke-white/50";
+          let textClass = "fill-white/80";
           let circleScale = 1;
 
-          if (role) {
-            const c = roleColor(role)!;
-            nodeFill = `url(#grad-${role})`;
-            nodeStroke = lightMix(c.fill, 30); // slightly lighter rim
-            nodeTextFill = c.text;
+          if (isSelectedPrimary) {
+            fillClass = "fill-sky-400";
+            strokeClass = "stroke-sky-400";
+            textClass = "fill-white";
             circleScale = 1.25;
-          } else if (someoneSelected) {
-            nodeFill = 'rgba(255,255,255,0.03)';
-            nodeStroke = 'rgba(255,255,255,0.22)';
-            nodeTextFill = 'rgba(255,255,255,0.35)';
+          } else if (isSelectedSecondary) {
+            fillClass = "fill-amber-300";
+            strokeClass = "stroke-amber-300";
+            textClass = "fill-white";
+            circleScale = 1.25;
+          } else if (isProduct) {
+            fillClass = "fill-emerald-400";
+            strokeClass = "stroke-emerald-400";
+            textClass = "fill-white";
+            circleScale = 1.25;
+          } else if (selectedNodes.length > 0) {
+            // Mute others — still visible, just dimmed
+            fillClass = "fill-white/[0.03]";
+            strokeClass = "stroke-white/25";
+            textClass = "fill-white/35";
           }
 
-          const ariaState =
-            role === 'd1' ? 'выбрана первой'
-            : role === 'd2' ? 'выбрана второй'
-            : role === 'product' ? 'результат произведения'
-            : 'не выбрана';
+          const ariaState = isSelectedPrimary
+            ? 'выбрана первой'
+            : isSelectedSecondary
+              ? 'выбрана второй'
+              : isProduct
+                ? 'результат произведения'
+                : 'не выбрана';
+          const isPressed = isSelectedPrimary || isSelectedSecondary || isProduct;
 
           return (
             <motion.g
@@ -185,53 +136,26 @@ export function FanoPlane({
                 strokeWidth="0.4"
                 className="stroke-cyan-400 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none"
               />
-
-              {/* Ambient outer glow for active nodes — premium soft halo, not CSS drop-shadow */}
-              {role && (
-                <motion.circle
-                  r="10"
-                  fill={`url(#glow-${role})`}
-                  filter="url(#node-soft-glow)"
-                  className="pointer-events-none"
-                  initial={{ opacity: 0, scale: 0.7 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                />
-              )}
-
               <motion.circle
                 r="3"
-                fill={nodeFill}
-                stroke={nodeStroke}
-                strokeWidth="0.4"
+                className={cn(fillClass, strokeClass)}
+                strokeWidth="0.5"
                 whileHover={isPressed ? undefined : { scale: 1.2 }}
                 animate={{ scale: circleScale }}
                 transition={{ type: 'spring', stiffness: 420, damping: 26 }}
               />
-
-              {/* Tiny inner highlight on active nodes — emulates light source from top-left */}
-              {role && (
-                <circle
-                  cx="-0.9" cy="-0.9" r="0.6"
-                  fill="white"
-                  opacity="0.55"
-                  className="pointer-events-none"
-                />
-              )}
-
               {showLabels && (
                 <text
                   y={layout.labelOffset.dy}
                   x={layout.labelOffset.dx}
                   textAnchor={layout.labelOffset.anchor}
                   alignmentBaseline="middle"
-                  fill={nodeTextFill}
                   style={
                     isPressed
                       ? { paintOrder: 'stroke', stroke: '#0a0a0c', strokeWidth: 0.7 }
                       : undefined
                   }
-                  className={cn("font-sans text-[3.5px] uppercase tracking-wider font-bold pointer-events-none")}
+                  className={cn("font-sans text-[3.5px] uppercase tracking-wider font-bold transition-colors pointer-events-none", textClass)}
                 >
                   {d.name}
                 </text>
