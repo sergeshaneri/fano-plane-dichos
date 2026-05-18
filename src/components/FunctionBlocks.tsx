@@ -20,8 +20,9 @@ export function FunctionMatrix({
     if (dichotomyId !== null) {
       // Just illustrating a single dichotomy block
       const val = f.dichotomies[dichotomyId];
-      // Dark gray if +1, white if -1 (matching user Image 2 convention somewhat)
-      return val === 1 ? "bg-cyan-500 text-[#0a0a0c]" : "bg-white/5 text-[#e2e2e7]";
+      return val === 1
+        ? "bg-cyan-400 text-zinc-950 font-bold"
+        : "bg-white/[0.03] text-white/30";
     }
 
     // Logic for main highlighted view based on selections
@@ -29,7 +30,9 @@ export function FunctionMatrix({
     const v2 = selectedNodes[1] ? f.dichotomies[selectedNodes[1]] : null;
 
     if (v1 && !v2) {
-      return v1 === 1 ? "bg-cyan-500 text-[#0a0a0c]" : "bg-white/5 text-white/40 border-white/10";
+      return v1 === 1
+        ? "bg-cyan-400 text-zinc-950 font-bold shadow-[inset_0_0_0_1px_rgba(34,211,238,0.6)]"
+        : "bg-white/[0.025] text-white/25";
     }
 
     if (v1 && v2) {
