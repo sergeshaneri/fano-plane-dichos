@@ -74,46 +74,73 @@ export function FanoPlane({
           const isSelectedSecondary = selectedNodes[1] === d.id;
           const isProduct = productNode === d.id;
           
-          let fillClass = "fill-[#0a0a0c]";
-          let strokeClass = "stroke-white/40";
+          let fillClass = "fill-white/[0.04]";
+          let strokeClass = "stroke-white/50";
           let textClass = "fill-white/80";
           let circleScale = 1;
 
           if (isSelectedPrimary) {
-            fillClass = "fill-blue-500";
-            strokeClass = "stroke-blue-500";
-            textClass = "fill-white drop-shadow-[0_0_4px_rgba(59,130,246,1)]";
-            circleScale = 1.15;
+            fillClass = "fill-sky-400";
+            strokeClass = "stroke-sky-300";
+            textClass = "fill-white";
+            circleScale = 1.25;
           } else if (isSelectedSecondary) {
-            fillClass = "fill-yellow-400";
-            strokeClass = "stroke-yellow-400";
-            textClass = "fill-white drop-shadow-[0_0_4px_rgba(250,204,21,1)]";
-            circleScale = 1.15;
+            fillClass = "fill-amber-300";
+            strokeClass = "stroke-amber-200";
+            textClass = "fill-zinc-900";
+            circleScale = 1.25;
           } else if (isProduct) {
-            fillClass = "fill-green-500";
-            strokeClass = "stroke-green-500";
-            textClass = "fill-white drop-shadow-[0_0_4px_rgba(34,197,94,1)]";
-            circleScale = 1.15;
+            fillClass = "fill-emerald-400";
+            strokeClass = "stroke-emerald-300";
+            textClass = "fill-zinc-900";
+            circleScale = 1.25;
           } else if (selectedNodes.length > 0) {
-            // Mute others
-            fillClass = "fill-[#0a0a0c]";
-            strokeClass = "stroke-white/20";
-            textClass = "fill-white/30";
+            // Mute others — still visible, just dimmed
+            fillClass = "fill-white/[0.03]";
+            strokeClass = "stroke-white/25";
+            textClass = "fill-white/35";
           }
+
+          const ariaState = isSelectedPrimary
+            ? 'выбрана первой'
+            : isSelectedSecondary
+              ? 'выбрана второй'
+              : isProduct
+                ? 'результат произведения'
+                : 'не выбрана';
+          const isPressed = isSelectedPrimary || isSelectedSecondary || isProduct;
 
           return (
             <motion.g
               key={d.id}
               transform={`translate(${pos[0]}, ${pos[1]})`}
               onClick={() => onNodeClick(d.id)}
-              className="cursor-pointer group"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onNodeClick(d.id);
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-label={`Дихотомия ${d.longName}, ${ariaState}`}
+              aria-pressed={isPressed}
+              className="cursor-pointer group outline-none"
             >
+              {/* Focus ring for keyboard users */}
+              <circle
+                r="4.5"
+                fill="none"
+                strokeDasharray="1 1"
+                strokeWidth="0.4"
+                className="stroke-cyan-400 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none"
+              />
               <motion.circle
                 r="3"
-                className={cn("transition-all duration-300", fillClass, strokeClass)}
-                strokeWidth="0.5"
-                whileHover={{ scale: 1.25 }}
-                animate={{ scale: circleScale }}
+                className={cn(fillClass, strokeClass)}
+                whileHover={isPressed ? undefined : { scale: 1.2 }}
+                animate={{ scale: circleScale, strokeWidth: isPressed ? 0.8 : 0.5 }}
+                transition={{ type: 'spring', stiffness: 420, damping: 26 }}
               />
               {showLabels && (
                 <text
